@@ -1,0 +1,28 @@
+{
+  "name": "landroof",
+  "version": "1.2.0",
+  "description": "Landroof Real Estate Super Platform — property listings, lead capture and admin CMS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/app.test.js test/admin-2fa.test.js",
+    "download-logo": "node scripts/download-logo.js",
+    "admin:2fa": "node scripts/admin-2fa.js",
+    "build-icons": "node scripts/build-icons.js"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.3",
+    "leaflet": "^1.9.4",
+    "multer": "^2.5.0",
+    "nodemailer": "^10.2.1"
+  }
+}

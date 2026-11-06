@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Landroof Admin</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0E1A2B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="/images/landroof-logo.png"
+           data-on-error="logoFallback('flex')"
+           alt="Landroof">
+      <span class="login-logo-fallback">LAND<span>ROOF</span></span>
+    </div>
+    <div class="login-sub">Admin Panel · Sign In</div>
+    <form class="lf" id="login-form">
+      <input type="text" id="lu" placeholder="Username" autocomplete="username" required>
+      <input type="password" id="lp" placeholder="Password" autocomplete="current-password" required>
+      <input type="text" id="lotp" placeholder="6-digit code from your authenticator app" inputmode="numeric" autocomplete="one-time-code" maxlength="7" hidden>
+      <button type="submit">Sign In</button>
+      <div id="login-err">Invalid credentials. Try again.</div>
+    </form>
+  </div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <img src="/images/landroof-logo.png"
+         data-on-error="logoFallback('inline')"
+         alt="Landroof">
+    <span class="sb-logo-fallback">LAND<span>ROOF</span></span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Overview</div>
+    <div role="button" tabindex="0" class="sb-item on" data-page="dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="sb-section">Listings</div>
+    <div role="button" tabindex="0" class="sb-item" data-page="properties">
+      <svg viewBox="0 0 24 24"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/></svg>
+      <span>Properties</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="cities">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Cities</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="requests">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>
+      <span>Listing Requests</span><span class="sb-badge" id="badge-requests" hidden></span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="reports">
+      <svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/></svg>
+      <span>Reported Listings</span><span class="sb-badge" id="badge-reports" hidden></span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="owners">
+      <svg viewBox="0 0 24 24"><path d="M3 21V10l9-7 9 7v11"/><circle cx="12" cy="13" r="3"/><path d="M7 21a5 5 0 0 1 10 0"/></svg>
+      <span>Owners</span>
+    </div>
+    <div class="sb-section">CRM</div>
+    <div role="button" tabindex="0" class="sb-item" data-page="leads">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Leads</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="users">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+      <span>Registered Users</span>
+    </div>
+    <div class="sb-section">Content</div>
+    <div role="button" tabindex="0" class="sb-item" data-page="testimonials">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Testimonials</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="team">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Team / Leadership</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="events">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Events</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="announcements">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Announcements</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="schemes">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Schemes / Offers</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="social">
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span>Social Posts</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="media">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span>Media Gallery</span>
+    </div>
+    <div class="sb-section">Security</div>
+    <div role="button" tabindex="0" class="sb-item" data-page="audit">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Activity Log</span>
+    </div>
+    <div class="sb-section">Settings</div>
+    <div role="button" tabindex="0" class="sb-item" data-page="siteconfig">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v-2M12 6V4"/></svg>
+      <span>Site Numbers</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="email">
+      <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+      <span>Email Settings</span>
+    </div>
+    <div role="button" tabindex="0" class="sb-item" data-page="password">
+      <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span>Change Password</span>
+    </div>
+  </nav>
+</aside>
+<div class="sb-backdrop" id="sb-backdrop"></div>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="tb-menu" id="sb-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <img class="tb-mark" src="/favicon.svg" alt="" width="28" height="28">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <span id="admin-user-label" class="tb-user"></span>
+      <button class="tb-btn" id="logout-btn">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ─────────────────────────────────────────── -->
+    <div class="page on" id="page-dashboard">
+      <div class="dash-hello">
+        <div><h2 id="dash-greeting">Welcome back</h2><p id="dash-date"></p></div>
+      </div>
+      <div class="stat-grid" id="stat-grid">
+        <div class="stat-card stat-or" role="button" tabindex="0" data-go="properties">
+          <span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/></svg></span>
+          <div class="stat-val" id="s-props">—</div><div class="stat-lbl">Total Listings</div><div class="stat-sub">All property types</div>
+        </div>
+        <div class="stat-card stat-blue" role="button" tabindex="0" data-go="leads">
+          <span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/></svg></span>
+          <div class="stat-val" id="s-leads">—</div><div class="stat-lbl">Total Leads</div><div class="stat-sub">All time</div>
+        </div>
+        <div class="stat-card stat-green" role="button" tabindex="0" data-go="leads">
+          <span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></span>
+          <div class="stat-val" id="s-today">—</div><div class="stat-lbl">Leads Today</div><div class="stat-sub">Searches &amp; enquiries</div>
+        </div>
+        <div class="stat-card stat-plum" role="button" tabindex="0" data-go="users">
+          <span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <div class="stat-val" id="s-users">—</div><div class="stat-lbl">Registered Users</div><div class="stat-sub">Website accounts</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">Recent Leads</span><button class="tb-btn" id="go-leads">View All Leads →</button></div>
+        <table class="recent-table">
+          <thead><tr><th>Contact</th><th>Source</th><th>Looking For</th><th>Received</th></tr></thead>
+          <tbody id="recent-leads-body"><tr><td colspan="4" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">Leads by Source</span><span class="card-note">Click a source to see its leads</span></div>
+        <div id="source-chart" class="src-grid"></div>
+      </div>
+    </div>
+
+    <!-- ── PROPERTIES ─────────────────────────────────────────── -->
+    <div class="page" id="page-properties">
+      <div class="page-head">
+        <div class="filters" id="prop-filters">
+          <button class="filter-btn on" data-type="all">All</button>
+          <button class="filter-btn" data-type="buy">Buy</button>
+          <button class="filter-btn" data-type="rent">Rent</button>
+          <button class="filter-btn" data-type="plots">Plots</button>
+          <button class="filter-btn" data-type="commercial">Commercial</button>
+          <button class="filter-btn filter-review" data-type="pending">Pending review<span class="fb-count" id="pending-props-count"></span></button>
+          <button class="filter-btn" data-type="offline">Sold / expired</button>
+          <input class="search-bar" id="prop-search" placeholder="Search title, city, owner…">
+        </div>
+        <button class="tb-btn tb-btn-or" id="add-prop-btn">+ Add Property</button>
+      </div>
+
+      <div class="owner-chip" id="owner-chip" hidden></div>
+      <div class="card">
+        <table>
+          <thead><tr><th></th><th>Title</th><th>Type</th><th>Price</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="props-tbody"><tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── REPORTED LISTINGS ───────────────────────────────────── -->
+    <div class="page" id="page-reports">
+      <div class="page-head">
+        <div class="filters" id="rep-filters">
+          <button class="filter-btn on" data-status="open">Open</button>
+          <button class="filter-btn" data-status="resolved">Resolved</button>
+          <button class="filter-btn" data-status="dismissed">Dismissed</button>
+          <button class="filter-btn" data-status="">All</button>
+        </div>
+      </div>
+      <p class="page-note">Visitors use "Report this listing" on a property page to flag wrong or out-of-date information. Check the listing, fix it (or mark it sold / withdrawn), then resolve the report.</p>
+      <div class="card">
+        <table>
+          <thead><tr><th>Listing</th><th>Problem</th><th>Reported by</th><th>When</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="reports-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── LISTING REQUESTS ───────────────────────────────────── -->
+    <div class="page" id="page-requests">
+      <div class="page-head">
+        <div class="filters" id="req-filters">
+          <button class="filter-btn on" data-status="pending">Pending</button>
+          <button class="filter-btn" data-status="approved">Approved</button>
+          <button class="filter-btn" data-status="rejected">Rejected</button>
+          <button class="filter-btn" data-status="all">All</button>
+        </div>
+        <div class="page-note">Approving emails the person a link to add their properties. Rejecting sends a polite note.</div>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Contact</th><th>Phone</th><th>Property</th><th>Received</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="req-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── OWNERS ─────────────────────────────────────────────── -->
+    <div class="page" id="page-owners">
+      <div class="page-head">
+        <div class="page-note">People whose listing request you approved, and how many listings each one has added.</div>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Owner</th><th>Phone</th><th>Account</th><th>Listings</th><th>Approved</th><th>Actions</th></tr></thead>
+          <tbody id="owners-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── LEADS ──────────────────────────────────────────────── -->
+    <div class="page" id="page-leads">
+      <div class="page-head">
+        <div class="filters">
+          <input class="search-bar" id="lead-search" placeholder="Search name, email, phone, city…" style="width:260px">
+          <select class="search-bar lead-filter" id="lead-source" aria-label="Filter by source"><option value="">All sources</option></select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="tb-btn" id="erase-btn" title="Delete every lead and the account for one email address">🗑 Delete All Data</button>
+          <button class="tb-btn tb-btn-or" id="export-csv-btn">⬇ Export CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>#</th><th>Contact</th><th>Phone</th><th>Source</th><th>Looking For</th><th>Device</th><th>Received</th><th></th></tr></thead>
+          <tbody id="leads-tbody"><tr><td colspan="8" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ACTIVITY LOG ───────────────────────────────────────── -->
+    <div class="page" id="page-audit">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Admin sign-ins (including failed ones), every change made in this panel, lead exports and account security events. Kept for one year.</div>
+        <select class="search-bar" id="audit-filter" style="width:220px">
+          <option value="">All activity</option>
+          <option value="admin.">Admin sign-ins</option>
+          <option value="admin.login_failed">Failed admin sign-ins</option>
+          <option value="create">Created</option>
+          <option value="update">Updated</option>
+          <option value="delete">Deleted</option>
+          <option value="export">Exports</option>
+          <option value="user.">Visitor accounts</option>
+          <option value="privacy.">Privacy</option>
+        </select>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Time</th><th>Who</th><th>Action</th><th>What</th><th>IP / Device</th></tr></thead>
+          <tbody id="audit-tbody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── USERS ──────────────────────────────────────────────── -->
+    <div class="page" id="page-users">
+      <div style="font-size:14px;color:var(--dim);margin-bottom:20px">People who created an account on the website. Each registration also appears in Leads.</div>
+      <div class="card">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Saved</th><th>Joined</th></tr></thead>
+          <tbody id="users-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CITIES ─────────────────────────────────────────────── -->
+    <div class="page" id="page-cities">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Cities shown in “Explore by city” on the home page, and in the city lists for search and properties.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('city',null)">+ Add City</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Photo</th><th>City</th><th>State</th><th>Listings</th><th>Order</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="cities-tbody"><tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── TESTIMONIALS ────────────────────────────────────────── -->
+    <div class="page" id="page-testimonials">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Manage client testimonials shown on the homepage.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('testimonial',null)">+ Add Testimonial</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Name</th><th>Role / City</th><th>Rating</th><th>Quote</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="testi-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── TEAM ─────────────────────────────────────────────────── -->
+    <div class="page" id="page-team">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Manage leadership and team members shown on the website.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('team',null)">+ Add Team Member</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Contact</th><th>Order</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="team-tbody"><tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── EVENTS ────────────────────────────────────────────────── -->
+    <div class="page" id="page-events">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Manage upcoming and past events with photos.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('event',null)">+ Add Event</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Photo</th><th>Title</th><th>Date</th><th>Location</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="events-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ANNOUNCEMENTS ─────────────────────────────────────────── -->
+    <div class="page" id="page-announcements">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Manage announcement banners shown at the top of the website.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('announcement',null)">+ Add Announcement</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Title</th><th>Body</th><th>Type</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="ann-tbody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SCHEMES ───────────────────────────────────────────────── -->
+    <div class="page" id="page-schemes">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Manage special offers and scheme banners.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('scheme',null)">+ Add Scheme</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Photo</th><th>Title</th><th>Valid Until</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="schemes-tbody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SOCIAL POSTS ───────────────────────────────────────────── -->
+    <div class="page" id="page-social">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Upload social media post images with captions and links.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('social',null)">+ Add Social Post</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Photo</th><th>Platform</th><th>Caption</th><th>Link</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody id="social-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── MEDIA GALLERY ─────────────────────────────────────────── -->
+    <div class="page" id="page-media">
+      <div class="page-head">
+        <div style="font-size:14px;color:var(--dim)">Upload and organise images for the website gallery.</div>
+        <button class="tb-btn tb-btn-or" data-on-click="openGenericDrawer('media',null)">+ Upload Image</button>
+      </div>
+      <div id="media-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px">
+        <div style="text-align:center;color:#aaa;padding:40px;grid-column:1/-1">Loading…</div>
+      </div>
+    </div>
+
+    <!-- ── SITE CONFIG ───────────────────────────────────────────── -->
+    <div class="page" id="page-siteconfig">
+      <div style="font-size:14px;color:var(--dim);margin-bottom:20px">Edit the numbers and key figures shown across the website. Changes appear live after saving.</div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Site-Wide Numbers</span><button class="tb-btn tb-btn-or" id="save-config-btn">💾 Save All</button></div>
+        <div style="padding:24px">
+          <div class="form-row">
+            <div class="form-group" style="margin:0"><label class="form-label">Active Listings</label><input type="number" class="form-control" id="cfg-active_listings" placeholder="4200"><div class="form-hint">Number shown in the stats band</div></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Happy Clients</label><input type="number" class="form-control" id="cfg-happy_clients" placeholder="1200"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin:0"><label class="form-label">Cities Covered</label><input type="number" class="form-control" id="cfg-cities_covered" placeholder="18"></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Satisfaction Rate (%)</label><input type="number" class="form-control" id="cfg-satisfaction_rate" placeholder="98"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin:0"><label class="form-label">Properties Sold</label><input type="text" class="form-control" id="cfg-properties_sold" placeholder="12,000+"></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Years in Business</label><input type="number" class="form-control" id="cfg-years_experience" placeholder="10"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin:0"><label class="form-label">WhatsApp Number</label><input type="text" class="form-control" id="cfg-whatsapp_number" placeholder="919999999999"><div class="form-hint">Country code + number, e.g. 919876543210. Leave empty to hide the WhatsApp button.</div></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Contact Email</label><input type="email" class="form-control" id="cfg-contact_email" placeholder="info@landroof.com"><div class="form-hint">Shown in the footer and Privacy Policy</div></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin:0"><label class="form-label">Contact Phone</label><input type="text" class="form-control" id="cfg-contact_phone" placeholder="+91 20 1234 5678"><div class="form-hint">Optional — shown in the footer</div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── EMAIL (SMTP) SETTINGS ─────────────────────────────────── -->
+    <div class="page" id="page-email">
+      <div class="card pw-card mail-card">
+        <div class="card-head"><span class="card-title">Email Settings (SMTP)</span></div>
+        <div class="mail-status" id="mail-status"></div>
+        <form id="mail-form" class="pw-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="mail-preset">Email provider</label>
+            <select class="form-control" id="mail-preset">
+              <option value="">— Choose to fill the server details —</option>
+              <option value="gmail">Gmail / Google Workspace</option>
+              <option value="outlook">Outlook / Microsoft 365</option>
+              <option value="zoho">Zoho Mail (India)</option>
+              <option value="bluehost">Bluehost email</option>
+              <option value="custom">Other (enter details)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin:0">
+              <label class="form-label" for="mail-host">SMTP server</label>
+              <input type="text" class="form-control" id="mail-host" placeholder="smtp.gmail.com" autocomplete="off">
+              <div class="form-err" id="mail-host-err"></div>
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label" for="mail-port">Port</label>
+              <input type="number" class="form-control" id="mail-port" min="1" max="65535" placeholder="465">
+              <div class="form-err" id="mail-port-err"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mail-secure">Security</label>
+            <select class="form-control" id="mail-secure">
+              <option value="1">SSL / TLS (port 465)</option>
+              <option value="0">STARTTLS (port 587)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mail-user">Username (email address)</label>
+            <input type="text" class="form-control" id="mail-user" placeholder="you@gmail.com" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mail-pass">Password / App password</label>
+            <input type="password" class="form-control" id="mail-pass" autocomplete="new-password">
+            <div class="form-hint" id="mail-pass-hint">For Gmail, create an App Password at myaccount.google.com/apppasswords (2-Step Verification must be on). It is stored encrypted and never shown again.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mail-from">Send emails as</label>
+            <input type="text" class="form-control" id="mail-from" placeholder="Landroof &lt;you@gmail.com&gt;">
+            <div class="form-hint">Gmail only allows your own address (or one added to that account).</div>
+            <div class="form-err" id="mail-from-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mail-admin">Admin notifications go to</label>
+            <input type="email" class="form-control" id="mail-admin" placeholder="Empty = contact email from Site Numbers">
+            <div class="form-hint">New "List Property" requests and listings waiting for review.</div>
+            <div class="form-err" id="mail-admin_email-err"></div>
+          </div>
+          <div class="mail-actions">
+            <button type="submit" class="tb-btn tb-btn-or" id="mail-save">Save Settings</button>
+            <button type="button" class="tb-btn" id="mail-reset" hidden>Use .env settings</button>
+          </div>
+        </form>
+        <div class="mail-test">
+          <div class="card-title">Send a test email</div>
+          <div class="mail-test-row">
+            <input type="email" class="form-control" id="mail-test-to" placeholder="name@example.com" aria-label="Send the test email to">
+            <button type="button" class="tb-btn" id="mail-test-btn">Send Test</button>
+          </div>
+          <div class="form-hint">Save first, then send a test to check that email works.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CHANGE PASSWORD ───────────────────────────────────────── -->
+    <div class="page" id="page-password">
+      <div class="card pw-card">
+        <div class="card-head"><span class="card-title">Change Admin Password</span></div>
+        <form id="pw-form" class="pw-form" novalidate>
+          <input type="text" name="username" autocomplete="username" id="pw-username" hidden>
+          <div class="form-group">
+            <label class="form-label" for="pw-current">Current Password</label>
+            <input type="password" class="form-control" id="pw-current" autocomplete="current-password" required>
+            <div class="form-err" id="pw-current-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pw-new">New Password</label>
+            <input type="password" class="form-control" id="pw-new" autocomplete="new-password" minlength="12" required>
+            <div class="form-hint">At least 12 characters, with letters and numbers.</div>
+            <div class="form-err" id="pw-new-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pw-confirm">Confirm New Password</label>
+            <input type="password" class="form-control" id="pw-confirm" autocomplete="new-password" required>
+            <div class="form-err" id="pw-confirm-err"></div>
+          </div>
+          <div class="pw-note">Other devices signed in to this admin panel will be signed out. You stay signed in here.</div>
+          <button type="submit" class="tb-btn tb-btn-or pw-submit" id="pw-submit">Update Password</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Property Drawer ── -->
+<div id="drawer-overlay"></div>
+<div class="drawer" id="prop-drawer">
+  <div class="drawer-head">
+    <span class="drawer-title" id="drawer-title">Add Property</span>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+  <div class="drawer-body">
+    <form id="prop-form" enctype="multipart/form-data">
+      <input type="hidden" id="edit-id">
+
+      <div class="form-group">
+        <label class="form-label">Property Title *</label>
+        <input type="text" class="form-control" name="title" id="f-title" placeholder="e.g. Spacious 3 BHK Apartment" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Listing Type *</label>
+          <select class="form-control" name="type" id="f-type">
+            <option value="buy">Buy</option>
+            <option value="rent">Rent</option>
+            <option value="plots">Plots</option>
+            <option value="commercial">Commercial</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Status</label>
+          <select class="form-control" name="status" id="f-status">
+            <option>Ready to Move</option>
+            <option>Under Construction</option>
+            <option>Fully Furnished</option>
+            <option>Semi-Furnished</option>
+            <option>Unfurnished</option>
+            <option>NA Approved</option>
+            <option>Clear Title</option>
+            <option>Ready</option>
+          </select>
+          <div class="form-hint">For rentals, the furnishing status powers the Furnishing search filter</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Sub-type</label>
+        <select class="form-control" name="subtype" id="f-subtype"></select>
+        <div class="form-hint">Used by the "Property Type" search filter</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Price Label *</label>
+          <input type="text" class="form-control" name="price_label" id="f-price-label" placeholder="e.g. ₹1.85 Cr or ₹45,000/mo" required>
+          <div class="form-hint">Displayed as-is on the card</div>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Price Value (₹) *</label>
+          <input type="number" class="form-control" name="price_val" id="f-price-val" placeholder="e.g. 18500000" required>
+          <div class="form-hint">Numeric value for sorting/filters</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">City *</label>
+          <select class="form-control" name="city" id="f-city">
+            <!-- filled from the Cities page when the form opens -->
+            <option>Pune</option><option>Mumbai</option><option>Bangalore</option>
+            <option>Hyderabad</option><option>Delhi NCR</option><option>Chennai</option>
+          </select>
+          <div class="form-hint">Add more cities on the Cities page.</div>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Locality / Area</label>
+          <input type="text" class="form-control" name="locality" id="f-locality" placeholder="e.g. Koregaon Park">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Area / Size</label>
+          <input type="text" class="form-control" name="area" id="f-area" placeholder="e.g. 1,480 sq ft">
+          <div class="form-hint">Write it in sq ft so the area filter works</div>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">EMI / Sub-label</label>
+          <input type="text" class="form-control" name="emi_label" id="f-emi" placeholder="e.g. EMI from ₹1.24 Lac/mo">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Bedrooms</label>
+          <input type="number" class="form-control" name="beds" id="f-beds" min="0" placeholder="0">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Bathrooms</label>
+          <input type="number" class="form-control" name="baths" id="f-baths" min="0" placeholder="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">RERA Number</label>
+        <input type="text" class="form-control" name="rera" id="f-rera" placeholder="e.g. P52100012345">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" name="description" id="f-desc" rows="3" placeholder="Full property description shown in detail view…"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label" for="f-furnishing">Furnishing</label>
+          <select class="form-control" name="furnishing" id="f-furnishing">
+            <option value="">— Not applicable —</option><option>Furnished</option><option>Semi-Furnished</option><option>Unfurnished</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" for="f-possession">Possession</label>
+          <input type="text" class="form-control" name="possession" id="f-possession" list="possession-list" placeholder="e.g. Ready to Move">
+          <datalist id="possession-list"><option>Ready to Move</option><option>Under Construction</option><option>Possession by Dec 2027</option></datalist>
+          <div class="form-hint">Powers the Possession filter</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="f-age">Property Age</label>
+        <select class="form-control" name="age_band" id="f-age">
+          <option value="">— Not specified —</option><option>New / Under construction</option><option>Less than 1 year</option><option>1-5 years</option><option>5-10 years</option><option>10+ years</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <span class="form-label">Amenities</span>
+        <div class="amen-chips" id="f-amenities"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label" for="f-listed-by">Listed By</label>
+          <select class="form-control" name="listed_by" id="f-listed-by">
+            <option value="landroof">Landroof</option><option value="developer">Developer / builder</option><option value="agent">Channel partner / agent</option><option value="owner">Owner</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" for="f-developer">Developer / Agent Name</label>
+          <input type="text" class="form-control" name="developer_name" id="f-developer" placeholder="Shown to visitors">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label" for="f-video">Video Tour (YouTube link)</label>
+          <input type="url" class="form-control" name="video_url" id="f-video" placeholder="https://youtu.be/…">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" for="f-tour">360° Tour Link</label>
+          <input type="url" class="form-control" name="tour_url" id="f-tour" placeholder="https://…">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="f-location">Map Location</label>
+        <input type="text" class="form-control" id="f-location" placeholder="18.5590, 73.7868 — or paste a Google Maps link">
+        <div class="form-hint">Puts the listing on the map search. Use the locality centre if the exact spot shouldn't be public.</div>
+      </div>
+
+      <div class="form-group">
+        <div class="toggle-row">
+          <label class="form-label" style="margin:0" for="f-project">Project page with plot inventory</label>
+          <label class="toggle"><input type="checkbox" id="f-project" value="1"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-hint">Plotted projects open a full project page with plot availability, approvals and downloads. Add plots from "Manage".</div>
+      </div>
+
+      <div class="form-group">
+        <div class="toggle-row">
+          <label class="form-label" style="margin:0" for="f-rera-verified">RERA number checked on the RERA website</label>
+          <label class="toggle"><input type="checkbox" id="f-rera-verified" value="1"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="toggle-row">
+          <label class="form-label" style="margin:0">Show on Homepage (Featured)</label>
+          <label class="toggle"><input type="checkbox" name="is_featured" id="f-featured" value="1"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Property Photo</label>
+        <div class="img-drop" id="img-drop" data-on-click="clickEl('img-input')">
+          <div class="img-drop-icon">📸</div>
+          <div class="img-drop-txt">Click or drag to upload photo</div>
+          <div class="img-drop-sub">JPG, PNG or WebP · Max 10 MB</div>
+          <img id="img-preview" class="img-preview" alt="preview">
+        </div>
+        <input type="file" id="img-input" name="image" accept="image/*" data-on-change="previewImg(this)">
+        <div id="current-img-note" style="font-size:12px;color:#888;margin-top:6px;display:none"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="f-gallery">More Photos <span class="opt">(up to 12 at a time)</span></label>
+        <input type="file" class="form-control" id="f-gallery" name="gallery" multiple accept="image/jpeg,image/png,image/webp">
+        <div class="gallery-current" id="f-gallery-current"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="f-floor">Floor Plan <span class="opt">(image)</span></label>
+        <input type="file" class="form-control" id="f-floor" name="floor_plan" accept="image/jpeg,image/png,image/webp">
+        <div class="form-hint" id="f-floor-current"></div>
+      </div>
+    </form>
+  </div>
+  <div class="drawer-foot">
+    <button class="tb-btn" id="drawer-cancel">Cancel</button>
+    <button class="tb-btn tb-btn-or" id="drawer-save">Save Property</button>
+  </div>
+</div>
+
+<!-- ── Listing Manager Drawer (review, status, verification, documents, plots, approvals, history) ── -->
+<div class="drawer drawer-wide" id="manage-drawer">
+  <div class="drawer-head">
+    <span class="drawer-title" id="mdrawer-title">Manage Listing</span>
+    <button class="drawer-close" data-on-click="closeManage()">✕</button>
+  </div>
+  <div class="drawer-body" id="mdrawer-body"></div>
+</div>
+
+<!-- ── Generic Content Drawer ── -->
+<div class="drawer" id="generic-drawer">
+  <div class="drawer-head">
+    <span class="drawer-title" id="gdrawer-title">Add Item</span>
+    <button class="drawer-close" data-on-click="closeGenericDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="gdrawer-body"></div>
+  <div class="drawer-foot">
+    <button class="tb-btn" data-on-click="closeGenericDrawer()">Cancel</button>
+    <button class="tb-btn tb-btn-or" id="gdrawer-save">Save</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="/js/actions.js"></script>
+<script src="/js/password-toggle.js"></script>
+<script src="/shared/validation.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
